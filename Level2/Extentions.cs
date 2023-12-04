@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace Level2;
+namespace Level2.Extensions;
 
 public static class Extensions
 {

@@ -1,5 +1,4 @@
-﻿using Level2;
-using Microsoft.VisualBasic;
+﻿using Level2.Extensions;
 
 var lines = File.ReadAllLines("Data/input.txt");
 Console.WriteLine("*******STAR1*******");
