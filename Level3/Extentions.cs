@@ -1,15 +1,20 @@
-﻿using System.Numerics;
+﻿using System.Globalization;
+using System.Numerics;
 using System.Text.RegularExpressions;
 
 namespace Level3.Extensions;
 
 public static class Extensions
 {
-    public static IEnumerable<(int num,int idx)> ExtractNumbers(this string str)
+    public static IEnumerable<(T num,int idx)> ExtractNumbers<T>(this string str) where T : INumber<T>
     {
         var regex = new Regex(@"\d+");
         var matches = regex.Matches(str);
-        return matches.Select(s => (int.Parse(s.Value),s.Index));
+        return matches.Select(s => (T.Parse(s.Value,null),s.Index));
+    }
+    public static IEnumerable<(int num,int idx)> ExtractNumbers(this string str)
+    {
+        return str.ExtractNumbers<int>();
     }
     public static string TryElementAt(this IEnumerable<string> list, int index)
     {

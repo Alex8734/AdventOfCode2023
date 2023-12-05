@@ -1,5 +1,4 @@
-﻿using Level3;
-using Level3.Extensions;
+﻿using Level3.Extensions;
 using Level2.Extensions;
 
 var lines = File.ReadAllLines("Data/input.txt");
@@ -16,16 +15,9 @@ static void Star1(string[] lines)
     {
         foreach (var (number,idx) in lines[i].ExtractNumbers())
         {
-            var start = idx;
-            var end = start + number.ToString().Length-1;
-            var charsAround = lines.TryElementAt(i - 1).TrySubstring(start - 1, number.ToString().Length + 2) +
-                              lines[i].TryElementAt(start - 1) +
-                              lines[i].TryElementAt(end + 1) +
-                              lines.TryElementAt(i + 1).TrySubstring(start - 1, number.ToString().Length + 2);
-            if (charsAround.Any(c => !char.IsNumber(c) && c != '.'))
+             
             {
                 numbers.Add(number);
-                Console.WriteLine(number);
             }
         }
     } 
@@ -40,8 +32,9 @@ static void Star2(string[] lines)
         {
             var start = index;
             var end = start + 1;
+            
             var charsAround = lines.TryElementAt(i - 1).TrySubstring(start - 1, 3) + ";" +
-                              lines[i].TryElementAt(start - 1) + ";" +
+                              lines[i].TryElementAt(start - 1) + "*" +
                               lines[i].TryElementAt(end + 1) + ";" +
                               lines.TryElementAt(i + 1).TrySubstring(start - 1, 3);
             var numCount = charsAround.Count(char.IsNumber);
@@ -49,8 +42,18 @@ static void Star2(string[] lines)
             {
                 //look for whole number
                 var segments = charsAround.Split(";");
-                
-
+                var digits = segments.Select(s => s.ExtractNumbers()).ToArray();
+                var numbers = new List<string>();
+                for (var j = 0; j < digits.Length; j++)
+                {
+                    var digitLine = digits[j];
+                    foreach (var digit in digitLine)
+                    {
+                        var orientation = digit.idx - 1;
+                        numbers.Add(lines[i+j-1]
+                            .TrySubstring(index  + ((2 + digit.num.ToString().Length) * orientation), 3));
+                    }
+                }
             }
         }
     }

@@ -71,8 +71,8 @@ static void Star2(string[] lines)
                     }
                 }
             }
-            Console.SetCursorPosition(0,3);
-            Console.WriteLine($"{i}: {k}/{copyies[i],-10}     {(k+1D)/(copyies[i]+1D)*100:F1}%                   ");
+            //Console.SetCursorPosition(0,3);
+            //Console.WriteLine($"{i}: {k}/{copyies[i],-10}     {(k+1D)/(copyies[i]+1D)*100:F1}%                   ");  wastes so much time xD
         }
     }
 
