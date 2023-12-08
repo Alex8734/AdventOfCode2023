@@ -48,8 +48,9 @@ static void Star2(string[] lines)
     for (int i = 1; i <= sortedHands.Count; i++)
     {
         total += sortedHands.Values[i-1] * i;
+        Console.WriteLine(sortedHands.Keys[i-1]);
     }
-
+    
     Console.WriteLine(total);
 }
 public class HandComparer : IComparer<string>
@@ -143,7 +144,12 @@ public class HandJokerComparer : IComparer<string>
     {
         if (x == null || y == null) return 0;
         if (x == y) return 0;
+        
         var xHand = new List<int>();
+        if(x == "KKJKJ")
+        {
+            Console.WriteLine();
+        }
         var yHand = new List<int>();
         for(int i = 0; i< x.Length; i++)
         {
@@ -155,8 +161,12 @@ public class HandJokerComparer : IComparer<string>
         var yTimes = new Dictionary<int, int>();
         foreach (var rating in Cards.Values)
         {
-            xTimes.Add(rating,xHand.Count(r => r == rating  || r == 1));
-            yTimes.Add(rating,yHand.Count(r => r == rating || r == 1));
+            
+            var xHandExt = xHand.Contains(1) ? GetReplacement(x).Select(c => Cards[c]) : xHand;
+            var yHandExt = yHand.Contains(1) ? GetReplacement(y).Select(c => Cards[c]) : yHand;
+            
+            xTimes.Add(rating,xHandExt.Count(r => r == rating ));
+            yTimes.Add(rating,yHandExt.Count(r => r == rating ));
         }
         if(GetType(xTimes) == GetType(yTimes))
         {
@@ -165,35 +175,38 @@ public class HandJokerComparer : IComparer<string>
 
         return GetType(xTimes) > GetType(yTimes) ? 1 : -1;
     }
-    private float GetType(Dictionary<int, int> hand)
+    private int GetType(Dictionary<int, int> hand )
     {
-        int jokers = hand.ContainsKey(Cards['J']) ? hand[Cards['J']] : 0;
-        var amounts = hand.Values.Where(v => v != jokers).ToList();
-        amounts.Sort();
-
-        if (jokers >= 5 || (amounts.Count > 0 && amounts[^1] + jokers >= 5))
-            return 5;
-        if (jokers >= 4 || (amounts.Count > 0 && amounts[^1] + jokers >= 4))
-            return 4;
-
-        // Try a full house
-        if (amounts.Count > 0 && amounts[^1] + jokers >= 3)
-        {
-            int remJokers = amounts[^1] + jokers - 3;
-            if (amounts.Count >= 2 && amounts[^2] + remJokers >= 2 || remJokers >= 2)
-                return 3.5F;
-            return 3;
-        }
-
-        if (amounts.Count > 0 && amounts[^1] + jokers >= 2)
-        {
-            int remJokers = amounts[^1] + jokers - 2;
-            if (amounts.Count >= 2 && amounts[^2] + remJokers >= 2 || remJokers >= 2)
-                return 2.5F;
-            return 2;
-        }
-
+        
+        if(hand.ContainsValue(5)) return 7;
+        if (hand.ContainsValue(4)) return 6;
+        if (hand.ContainsValue(3) && hand.ContainsValue(2)) return 5;
+        if (hand.ContainsValue(3)) return 4;
+        if (hand.Values.Count(i => i == 2) == 2) return 3;
+        if (hand.ContainsValue(2)) return 2;
         return 1;
+    }
+    private string GetReplacement(string hand)
+    {
+        var replacements = new List<string> { hand };
+        if(hand == "JJJJJ") return "AAAAA";
+        for (int i = 0; i < hand.Length; i++)
+        {
+            if (hand[i] == 'J')
+            {
+                var newReplacements = new List<string>();
+
+                foreach (var replacement in replacements)
+                {
+                    newReplacements.AddRange(Cards.Keys.Where(c => c != 'J')
+                        .Select(card => replacement.Remove(i, 1).Insert(i, card.ToString())));
+                }
+
+                replacements = newReplacements;
+            }
+        }
+
+        return replacements.Max(new HandComparer())!;
     }
     private int CheckIfEqual(List<int> xHand, List<int> yHand)
     {
