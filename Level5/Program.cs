@@ -85,7 +85,7 @@ static void Star2(string[] lines)
         seeds = newValues;
     }
 
-    Console.WriteLine(seeds.Min().Start);
+    Console.WriteLine(seeds.Min()!.Start);
 }
 
 public class LongRange : IEnumerable<long> , IComparable<LongRange>

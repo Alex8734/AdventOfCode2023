@@ -15,7 +15,14 @@ static void Star1(string[] lines)
     {
         foreach (var (number,idx) in lines[i].ExtractNumbers())
         {
-             
+            var start = idx;
+            var end = start + number.ToString().Length-1;
+            
+            var charsAround = lines.TryElementAt(i - 1).TrySubstring(start - 1, end - start + 3) + 
+                              lines[i].TryElementAt(start - 1) + 
+                              lines[i].TryElementAt(end + 1) + 
+                              lines.TryElementAt(i + 1).TrySubstring(start - 1, end - start + 3);
+            if(charsAround.Count(n =>  n != '.') > 0)
             {
                 numbers.Add(number);
             }
