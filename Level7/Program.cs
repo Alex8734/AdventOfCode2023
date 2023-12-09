@@ -48,7 +48,6 @@ static void Star2(string[] lines)
     for (int i = 1; i <= sortedHands.Count; i++)
     {
         total += sortedHands.Values[i-1] * i;
-        Console.WriteLine(sortedHands.Keys[i-1]);
     }
     
     Console.WriteLine(total);
@@ -146,10 +145,6 @@ public class HandJokerComparer : IComparer<string>
         if (x == y) return 0;
         
         var xHand = new List<int>();
-        if(x == "KKJKJ")
-        {
-            Console.WriteLine();
-        }
         var yHand = new List<int>();
         for(int i = 0; i< x.Length; i++)
         {

@@ -8,7 +8,7 @@ public static class Extensions
 {
     public static IEnumerable<(T num,int idx)> ExtractNumbers<T>(this string str) where T : INumber<T>
     {
-        var regex = new Regex(@"\d+");
+        var regex = new Regex(@"-?\d+");
         var matches = regex.Matches(str);
         return matches.Select(s => (T.Parse(s.Value,null),s.Index));
     }
