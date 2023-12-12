@@ -84,16 +84,15 @@ static void Star2(string[] strings)
         while (!currents[i].EndsWith("Z"))
         {
             var next = getNext();
-            
-                var current = currents[i];
-                var (left, right) = ways[current];
-                currents[i] = next switch
-                {
-                    Chose.Right => right,
-                    Chose.Left => left,
-                    _ => throw new ArgumentOutOfRangeException(nameof(next), next, null)
+            var current = currents[i];
+            var (left, right) = ways[current];
+            currents[i] = next switch
+            {
+                Chose.Right => right,
+                Chose.Left => left,
+                _ => throw new ArgumentOutOfRangeException(nameof(next), next, null)
 
-                };
+            };
                    
             runs++;
         }
